@@ -1,0 +1,8 @@
+WithWindowsBuild = false
+
+[[targets]]
+os = "linux"
+
+[buildpack]
+  id = "examples/julia"
+  version = "0.0.1"
