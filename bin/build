@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+layers_dir="$1"
+env_dir="$2/env"
+plan_path="$3"
+
+julia_layer="${CNB_LAYERS_DIR}"/julia
+mkdir -p "${julia_layer}"
+
+curl -fsSL https://install.julialang.org | sh -s -- --yes --path "${julia_layer}"
+
+# execute julia the first time
+bash -c "${julia_layer}/bin/juliaup update"
+bash -c "${julia_layer}/bin/julia -e 'using Pkg; Pkg.instantiate(); Pkg.precompile();'";
+
+#ln -s '${julia_layer}/bin/julia' '/cbn/process/julia'
+
+# make julia available during launch
+echo -e '[types]\nlaunch = true' > "${CNB_LAYERS_DIR}/julia.toml"
+
+# define inline buildpack
+cat > "${CNB_LAYERS_DIR}/launch.toml" << EOL
+[[processes]]
+type = "julia"
+command = ["${julia_layer}/bin/julia"]
+default = true
+EOL
+
+exit 0
