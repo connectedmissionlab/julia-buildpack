@@ -2,43 +2,38 @@
 
 set -euo pipefail
 
-layers_dir="$1"
-env_dir="$2/env"
-plan_path="$3"
+layer=$CNB_LAYERS_DIR
+julia_layer=$layer/julia
+julia_launch=$layer/launchjulia
+mkdir -p $julia_layer $julia_launch
 
-julia_layer="${CNB_LAYERS_DIR}/julia"
-mkdir -p "${julia_layer}"
+curl -fsSL https://install.julialang.org | sh -s -- --add-to-path=0 --yes --path $julia_layer
 
-#echo "JULIA_DEPOT_PATH = ${JULIA_DEPOT_PATH}"
-#echo "HOME = ${HOME}"
-
-curl -fsSL https://install.julialang.org | sh -s -- --add-to-path=0 --yes --path "${julia_layer}"
-
-#bash -c "${julia_layer}/bin/juliaup update"
 echo "instantiating ..."
 bash -c "${julia_layer}/bin/julia -e 'using Pkg; Pkg.instantiate(); Pkg.precompile();'";
 echo "done"
 
-#du -sh ~/.julia
-cp -r "${HOME}/.julia" "${CNB_LAYERS_DIR}/juliahome"
-mkdir -p "${CNB_LAYERS_DIR}/julialaunch"
-cat > "${CNB_LAYERS_DIR}/julialaunch/julia.sh" << EOL
+# save the julia home directory
+echo "generating launch script ..."
+cp -r $HOME/.julia $layer/dotjulia
+cat > $julia_launch/julia.sh << EOL
 #!/bin/bash
-ln -s $CNB_LAYERS_DIR/juliahome $HOME/.julia
-#cp -r $CNB_LAYERS_DIR/juliahome/.julia ~/.
-$CNB_LAYERS_DIR/julia/bin/./julia
+ln -s $layer/dotjulia $HOME/.julia
+$layer/julia/bin/./julia
 EOL
-chmod +x "${CNB_LAYERS_DIR}/julialaunch/julia.sh"
+chmod +x $julia_launch/julia.sh
+echo "done"
 
 # make julia available during launch
-echo -e '[types]\nlaunch = true' > "${CNB_LAYERS_DIR}/julia.toml"
-echo -e '[types]\nlaunch = true' > "${CNB_LAYERS_DIR}/juliahome.toml"
-echo -e '[types]\nlaunch = true' > "${CNB_LAYERS_DIR}/julialaunch.toml"
+echo -e '[types]\nlaunch = true' > $layer/julia.toml
+echo -e '[types]\nlaunch = true' > $layer/dotjulia.toml
+echo -e '[types]\nlaunch = true' > $layer/launchjulia.toml
 
-cat > "${CNB_LAYERS_DIR}/launch.toml" << EOL
+# default launch process
+cat > $layer/launch.toml << EOL
 [[processes]]
 type = "shell"
-command = ["${CNB_LAYERS_DIR}/julialaunch/./julia.sh"]
+command = ["${layer}/launchjulia/./julia.sh"]
 default = true
 EOL
 
