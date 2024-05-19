@@ -1,3 +1,4 @@
+api = "0.10"
 WithWindowsBuild = false
 
 [[targets]]
