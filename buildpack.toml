@@ -5,5 +5,5 @@ WithWindowsBuild = false
 os = "linux"
 
 [buildpack]
-  id = "examples/julia"
+  id = "julia"
   version = "0.0.1"

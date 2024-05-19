@@ -7,24 +7,24 @@ julia_layer=$layer/julia
 julia_launch=$layer/launchjulia
 mkdir -p $julia_layer $julia_launch
 
+# download & install julia, instantiate & precompile
 curl -fsSL https://install.julialang.org | sh -s -- --add-to-path=0 --yes --path $julia_layer
-
-echo "instantiating ..."
 bash -c "${julia_layer}/bin/julia -e 'using Pkg; Pkg.instantiate(); Pkg.precompile();'";
-echo "done"
+
+# add here the custom package if it exists
 
 # save the julia home directory
-echo "generating launch script ..."
+# note: mv instead of cp & rm is slower
 cp -r $HOME/.julia $layer/dotjulia
 cat > $julia_launch/julia.sh << EOL
 #!/bin/bash
-mv $layer/dotjulia $HOME/.julia
-$layer/julia/bin/./julia
+cp -r $layer/dotjulia $HOME/.julia
+rm -rf $layer/dotjulia
+$layer/julia/bin/./julia --project=@.
 EOL
 chmod +x $julia_launch/julia.sh
-echo "done"
 
-# make julia available during launch
+# set launch directories
 echo -e '[types]\nlaunch = true' > $layer/julia.toml
 echo -e '[types]\nlaunch = true' > $layer/dotjulia.toml
 echo -e '[types]\nlaunch = true' > $layer/launchjulia.toml
