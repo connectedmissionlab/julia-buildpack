@@ -25,9 +25,9 @@ EOL
 chmod +x $julia_launch/julia.sh
 
 # set launch directories
-echo -e '[types]\nlaunch = true' > $layer/julia.toml
-echo -e '[types]\nlaunch = true' > $layer/dotjulia.toml
-echo -e '[types]\nlaunch = true' > $layer/launchjulia.toml
+for file in julia.toml dotjulia.toml launchjulia.toml; do
+  echo -e "[types]\nlaunch = true" > "$layer/$file"
+done
 
 # default launch process
 cat > $layer/launch.toml << EOL
