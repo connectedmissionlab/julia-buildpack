@@ -18,7 +18,7 @@ echo "generating launch script ..."
 cp -r $HOME/.julia $layer/dotjulia
 cat > $julia_launch/julia.sh << EOL
 #!/bin/bash
-ln -s $layer/dotjulia $HOME/.julia
+mv $layer/dotjulia $HOME/.julia
 $layer/julia/bin/./julia
 EOL
 chmod +x $julia_launch/julia.sh
