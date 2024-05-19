@@ -6,25 +6,39 @@ layers_dir="$1"
 env_dir="$2/env"
 plan_path="$3"
 
-julia_layer="${CNB_LAYERS_DIR}"/julia
+julia_layer="${CNB_LAYERS_DIR}/julia"
 mkdir -p "${julia_layer}"
 
-curl -fsSL https://install.julialang.org | sh -s -- --yes --path "${julia_layer}"
+#echo "JULIA_DEPOT_PATH = ${JULIA_DEPOT_PATH}"
+#echo "HOME = ${HOME}"
 
-# execute julia the first time
-bash -c "${julia_layer}/bin/juliaup update"
+curl -fsSL https://install.julialang.org | sh -s -- --add-to-path=0 --yes --path "${julia_layer}"
+
+#bash -c "${julia_layer}/bin/juliaup update"
+echo "instantiating ..."
 bash -c "${julia_layer}/bin/julia -e 'using Pkg; Pkg.instantiate(); Pkg.precompile();'";
+echo "done"
 
-#ln -s '${julia_layer}/bin/julia' '/cbn/process/julia'
+#du -sh ~/.julia
+cp -r "${HOME}/.julia" "${CNB_LAYERS_DIR}/juliahome"
+mkdir -p "${CNB_LAYERS_DIR}/julialaunch"
+cat > "${CNB_LAYERS_DIR}/julialaunch/julia.sh" << EOL
+#!/bin/bash
+ln -s $CNB_LAYERS_DIR/juliahome $HOME/.julia
+#cp -r $CNB_LAYERS_DIR/juliahome/.julia ~/.
+$CNB_LAYERS_DIR/julia/bin/./julia
+EOL
+chmod +x "${CNB_LAYERS_DIR}/julialaunch/julia.sh"
 
 # make julia available during launch
 echo -e '[types]\nlaunch = true' > "${CNB_LAYERS_DIR}/julia.toml"
+echo -e '[types]\nlaunch = true' > "${CNB_LAYERS_DIR}/juliahome.toml"
+echo -e '[types]\nlaunch = true' > "${CNB_LAYERS_DIR}/julialaunch.toml"
 
-# define inline buildpack
 cat > "${CNB_LAYERS_DIR}/launch.toml" << EOL
 [[processes]]
-type = "julia"
-command = ["${julia_layer}/bin/julia"]
+type = "shell"
+command = ["${CNB_LAYERS_DIR}/julialaunch/./julia.sh"]
 default = true
 EOL
 
