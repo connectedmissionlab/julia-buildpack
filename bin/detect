@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
-set -eo pipefail
+set -euo pipefail
 
-echo $1
 if [ -f Project.toml ]; then
-  echo "julia pkg"
-  exit 0
+  echo "[detect] julia pkg detected"
 else
-  echo "no julia pkg detected - proceeding with base julia"
-  exit 0
+  echo "[detect] no julia pkg detected - proceeding with base julia"
 fi
 
-
+exit 0

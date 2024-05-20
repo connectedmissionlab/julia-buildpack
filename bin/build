@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 set -euo pipefail
 
 layer=$CNB_LAYERS_DIR
@@ -13,9 +12,9 @@ $julia_layer/bin/julia --project=$(pwd) -e "using Pkg; Pkg.instantiate(); Pkg.pr
 
 # determine the name of the app (aka package)
 if [ -f Project.toml ]; then
-appName=$(head -n 1 Project.toml | awk -F '"' '{print $2}')
+  appName=$(head -n 1 Project.toml | awk -F '"' '{print $2}')
 else
-appName=""
+  appName=""
 fi
 
 # save the julia home directory
