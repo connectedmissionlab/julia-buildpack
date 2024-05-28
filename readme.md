@@ -18,7 +18,10 @@ julia -e 'import Pkg; Pkg.develop("Example");'
 Build the pack locally (outside the `julia-buildpack`) directory:
 
 ```bash
-pack build example-app -v --path ~/.julia/dev/Example --buildpack ./julia-buildpack --builder gcr.io/buildpacks/builder:v1
+pack build example-app -v \
+           --path ~/.julia/dev/Example \
+           --buildpack ./julia-buildpack \
+           --builder gcr.io/buildpacks/builder:v1
 ```
 
 Launch `julia`:
@@ -36,7 +39,9 @@ docker run -it --entrypoint /bin/bash example-app
 If you just want to containerize `julia` without including a specific package:
 
 ```bash
-pack build julia-buildpack --buildpack ./julia-buildpack --builder gcr.io/buildpacks/builder:v1
+pack build julia-buildpack \
+           --buildpack ./julia-buildpack \
+           --builder gcr.io/buildpacks/builder:v1
 ```
 
 Then, you can run the julia REPL with
