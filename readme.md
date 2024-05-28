@@ -1,5 +1,5 @@
-![](https://raw.githubusercontent.com/JuliaLang/julia-logo-graphics/master/images/julia-logo-color.svg)
-![buildpack logo](https://buildpacks.io/images/buildpacks-logo.svg "Buildpack Logo")
+<center><img src="https://raw.githubusercontent.com/JuliaLang/julia-logo-graphics/master/images/julia-logo-color.svg" height="50px"></center>
+<center><img src="https://buildpacks.io/images/buildpacks-logo.svg" height="50px"></center>
 
 # Julia Buildpack
 
