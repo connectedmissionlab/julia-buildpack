@@ -1,3 +1,6 @@
+![](https://raw.githubusercontent.com/JuliaLang/julia-logo-graphics/master/images/julia-logo-color.svg)
+![buildpack logo](https://buildpacks.io/images/buildpacks-logo.svg "Buildpack Logo")
+
 # Julia Buildpack
 
 You can build locally a Cloud Native Buildpack for `julia` in 2 different ways:
