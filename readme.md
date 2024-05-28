@@ -1,5 +1,5 @@
-<center><img src="https://raw.githubusercontent.com/JuliaLang/julia-logo-graphics/master/images/julia-logo-color.svg" height="50px"></center>
-<center><img src="https://buildpacks.io/images/buildpacks-logo.svg" height="50px"></center>
+<center><img src="https://raw.githubusercontent.com/JuliaLang/julia-logo-graphics/master/images/julia-language-logo-white-border.svg" height="100px"></center>
+<center><img src="https://buildpacks.io/images/buildpacks-logo.svg" height="100px"></center>
 
 # Julia Buildpack
 
